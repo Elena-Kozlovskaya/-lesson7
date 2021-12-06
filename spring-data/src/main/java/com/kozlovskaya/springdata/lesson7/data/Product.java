@@ -19,17 +19,6 @@ public class Product {
     public Product() {
     }
 
-    public Product(String title, Integer cost) {
-        this.title = title;
-        this.cost = cost;
-    }
-
-    public Product(Long id, String title, Integer cost) {
-        this.id = id;
-        this.title = title;
-        this.cost = cost;
-    }
-
     public Long getId() {
         return id;
     }
