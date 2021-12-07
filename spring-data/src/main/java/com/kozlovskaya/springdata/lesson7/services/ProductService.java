@@ -2,8 +2,10 @@ package com.kozlovskaya.springdata.lesson7.services;
 
 
 import com.kozlovskaya.springdata.lesson7.data.Product;
+import com.kozlovskaya.springdata.lesson7.exeptions.ResourceNotFoundException;
 import com.kozlovskaya.springdata.lesson7.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,9 +31,26 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public void changeCost(Long id, Integer delta) {
-        /*Product product = productRepository.findById(id);
+    @Transactional
+    public void changeCost(Long productId, Integer delta) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Unable to change product's cost. Product is not found, id: " + productId));
         product.setCost(product.getCost() + delta);
-        productDaoWeb.saveOrUpdate(product);*/
+    }
+
+    public List<Product> findAllByCostBetween(Integer min, Integer max) {
+        return productRepository.findAllByCostBetween(min, max);
+    }
+
+    public List<Product> findAllByCostMoreThanMin(Integer min){
+        return productRepository.findAllByCostMoreThanMin(min);
+    }
+
+    public List<Product> findAllByCostLessThanMax(Integer max){
+        return productRepository.findAllByCostLessThanMax(max);
+    }
+
+    @Transactional
+    public Product addProduct(Product product){
+        return productRepository.save(product);
     }
 }
