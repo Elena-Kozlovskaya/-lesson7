@@ -38,22 +38,14 @@ public class ProductController {
     }
 
     @GetMapping("/products/cost_between")
-    public List<Product> findProductByScoreBetween(@RequestParam(defaultValue = "0") Integer min, @RequestParam(defaultValue = "200") Integer max) {
+    public List<Product> findProductByCostBetween(@RequestParam(defaultValue = "0") Integer min, @RequestParam(defaultValue = "2000")Integer max) {
+        System.out.println(min + " " + max);
         return productService.findAllByCostBetween(min, max);
     }
-    @GetMapping("/products/cost_moreThanMin")
-    public List<Product> findByCostMoreThanMin(@RequestParam(defaultValue = "0") Integer min) {
-        return productService.findAllByCostMoreThanMin(min);
-    }
-    @GetMapping("/products/cost_lessThanMax")
-    public List<Product> findByCostLessThanMax(@RequestParam(required = false) Integer max) {
-        return productService.findAllByCostLessThanMax(max);
-    }
 
-    @PostMapping("/add_product")
-    public void addProduct(@RequestBody Product p){
-        productService.addProduct(p);
-        System.out.println(p.getTitle());
+    @PostMapping("/products")
+    public Product addProduct(@RequestBody Product product){
+        return productService.addProduct(product);
     }
 
 

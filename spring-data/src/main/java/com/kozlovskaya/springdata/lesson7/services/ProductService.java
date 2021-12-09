@@ -38,15 +38,13 @@ public class ProductService {
     }
 
     public List<Product> findAllByCostBetween(Integer min, Integer max) {
-        return productRepository.findAllByCostBetween(min, max);
-    }
-
-    public List<Product> findAllByCostMoreThanMin(Integer min){
-        return productRepository.findAllByCostMoreThanMin(min);
-    }
-
-    public List<Product> findAllByCostLessThanMax(Integer max){
-        return productRepository.findAllByCostLessThanMax(max);
+        if(min == 0){
+            return productRepository.findAllByCostLessThanMax(max);
+        } else if(max == 2000){
+            return productRepository.findAllByCostMoreThanMin(min);
+        } else {
+            return productRepository.findAllByCostBetween(min, max);
+        }
     }
 
     @Transactional
