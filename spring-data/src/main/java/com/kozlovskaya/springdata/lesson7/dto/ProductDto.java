@@ -1,23 +1,16 @@
-package com.kozlovskaya.springdata.lesson7.data;
+package com.kozlovskaya.springdata.lesson7.dto;
+
+import com.kozlovskaya.springdata.lesson7.entities.Product;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "products")
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+public class ProductDto {
+
     private Long id;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "cost")
     private Integer cost;
-
-    public Product() {
-    }
 
     public Long getId() {
         return id;
@@ -43,12 +36,13 @@ public class Product {
         this.cost = cost;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", cost=" + cost +
-                '}';
+    public ProductDto() {
     }
+
+    public ProductDto(Product product){
+        this.id = product.getId();
+        this.title = product.getTitle();
+        this.cost = product.getCost();
+    }
+
 }
