@@ -1,4 +1,6 @@
-package com.kozlovskaya.springdata.lesson7.data;
+package com.kozlovskaya.springdata.lesson7.entities;
+
+import com.kozlovskaya.springdata.lesson7.dto.ProductDto;
 
 import javax.persistence.*;
 
@@ -17,17 +19,6 @@ public class Product {
     private Integer cost;
 
     public Product() {
-    }
-
-    public Product(String title, Integer cost) {
-        this.title = title;
-        this.cost = cost;
-    }
-
-    public Product(Long id, String title, Integer cost) {
-        this.id = id;
-        this.title = title;
-        this.cost = cost;
     }
 
     public Long getId() {
