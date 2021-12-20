@@ -5,7 +5,8 @@ import com.kozlovskaya.springdata.lesson7.dto.ProductDto;
 import com.kozlovskaya.springdata.lesson7.entities.Product;
 import com.kozlovskaya.springdata.lesson7.exeptions.ResourceNotFoundException;
 import com.kozlovskaya.springdata.lesson7.repositories.ProductRepository;
-import com.kozlovskaya.springdata.lesson7.repositories.ProductSpecifications;
+import com.kozlovskaya.springdata.lesson7.repositories.specifications.ProductSpecifications;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,14 +17,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
-
-    public Page<Product> find(Integer minCost, Integer maxCost, String titlePart, Integer page){
+    public Page<Product> findAll(Integer minCost, Integer maxCost, String titlePart, Integer page){
         Specification<Product> spec = Specification.where(null);
 
         // select p from Product p where true - первоначальный запрос
@@ -41,11 +39,7 @@ public class ProductService {
             // select p from Product p where true AND p.cost > minCost AND p.title LIKE %titlePart%
         }
         // если titlePart не указали остается: // select p from Product p where true AND p.cost > minCost AND p.cost < maxCost
-        return productRepository.findAll(spec, PageRequest.of(page - 1, 5));
-    }
-
-    public List<Product> findAll() {
-        return productRepository.findAll();
+        return productRepository.findAll(spec, PageRequest.of(page - 1, 50));
     }
 
     public Optional<Product> findById(Long id) {
@@ -56,7 +50,19 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
+    public Product save(Product product) {
+        return productRepository.save(product);
+    }
+
     @Transactional
+    public Product updateProduct(ProductDto productDto){
+        Product product = productRepository.findById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundException("Обновление продукта невозможно, id: " + productDto.getId() + " в базе не найден."));
+        product.setTitle(productDto.getTitle());
+        product.setCost(productDto.getCost());
+        return product;
+    }
+
+    /*@Transactional
     public void changeCost(Long productId, Integer delta) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Unable to change product's cost. Product is not found, id: " + productId));
         product.setCost(product.getCost() + delta);
@@ -70,13 +76,5 @@ public class ProductService {
         } else {
             return productRepository.findAllByCostBetween(min, max);
         }
-    }
-
-    @Transactional
-    public Product addProduct(ProductDto productDto){
-        Product product = new Product();
-        product.setTitle(productDto.getTitle());
-        product.setCost(productDto.getCost());
-        return productRepository.save(product);
-    }
+    }*/
 }

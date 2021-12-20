@@ -43,32 +43,25 @@
       <td>Действие</td>
     </tr>
     <tbody>
-
-    <tr ng-repeat="p in ProductsList">
+    <tr ng-repeat="p in ProductsPage.content">
       <td>{{p.id}}</td>
       <td>{{p.title}}</td>
+      <td>{{p.cost}}</td>
+
       <!--<td>
         <button class="btn btn-primary" ng-click="changeCost(p.id, -5)">-</button>
         {{p.cost}}
         <button class="btn btn-primary" ng-click="changeCost(p.id, 5)">+</button>
       </td>-->
-      <td>
+      <!--<td>
         <button class="btn btn-danger" ng-click="deleteProduct(p.id)">Удалить</button>
+      </td>-->
+      <td>
+        <button class="btn btn-danger" ng-click="deleteProduct(p.id)">Добавить в корзину</button>
       </td>
     </tr>
     </tbody>
   </table>
-
-  <p></p>
-  <h3>Добавить продукт</h3>
-  <form novalidate ng-submit="createProduct()">
-    <input class="form-control" type="text" placeholder="Название" ng-model="newProduct.title">
-    <p></p>
-    <input class="form-control" type="number" placeholder="Цена" ng-model="newProduct.cost">
-    <p></p>
-    <button type="submit" class="btn btn-primary">Сохранить продукт</button>
-  </form>
-  <p></p>
 
   <!--<p></p>
   <h3>Фильтр по цене</h3>

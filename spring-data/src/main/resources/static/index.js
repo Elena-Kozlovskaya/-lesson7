@@ -15,18 +15,18 @@ angular.module('homework_app', []).controller('indexController', function ($scop
             }
         }).then(function (response) {
             console.log(response.data)
-            $scope.ProductsList = response.data.content;
+            $scope.ProductsPage = response.data;
         });
     };
 
 
-     $scope.deleteProduct = function(productId){
+    /* $scope.deleteProduct = function(productId){
          $http.delete(contextPath + '/products/' + productId)
              .then(function (response) {
                  alert('DELETED')
                  $scope.loadProducts();
              });
-    }
+    }*/
     /*$scope.changeCost = function(productId, delta){
         // console.log('Click!');
          $http({
@@ -41,13 +41,13 @@ angular.module('homework_app', []).controller('indexController', function ($scop
             });
     }*/
 
-    $scope.createProduct = function(){
+    /*$scope.createProduct = function(){
         console.log($scope.newProduct);
         $http.post(contextPath + '/products', $scope.newProduct)
             .then(function(response){
                 $scope.loadProducts();
             });
-    }
+    }*/
 
     /*$scope.filter = function(){
         $http({

@@ -1,4 +1,4 @@
-package com.kozlovskaya.springdata.lesson7.repositories;
+package com.kozlovskaya.springdata.lesson7.repositories.specifications;
 
 import com.kozlovskaya.springdata.lesson7.entities.Product;
 import org.springframework.data.jpa.domain.Specification;
