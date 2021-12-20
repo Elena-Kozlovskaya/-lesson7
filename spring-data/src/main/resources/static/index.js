@@ -4,11 +4,11 @@ angular.module('homework_app', []).controller('indexController', function ($scop
     // console.log(123);
 
 
-    $scope.loadProducts = function(pageIndex = 1) {
+    $scope.loadProducts = function (pageIndex = 1) {
         $http({
             url: contextPath + '/products',
             method: 'GET',
-            params:{
+            params: {
                 title_part: $scope.filter ? $scope.filter.title_part : null,
                 min_cost: $scope.filter ? $scope.filter.min_cost : null,
                 max_cost: $scope.filter ? $scope.filter.max_cost : null
@@ -19,6 +19,29 @@ angular.module('homework_app', []).controller('indexController', function ($scop
         });
     };
 
+    $scope.loadCart = function () {
+        $http.get(contextPath + '/carts')
+            .then(function (response) {
+                console.log(response.data)
+                $scope.CartsList = response.data;
+            });
+    };
+
+    $scope.addProductToCart = function (productId) {
+        console.log('Click! ' + productId);
+        $http.get(contextPath + '/carts/' + productId)
+            .then(function (response) {
+                $scope.loadCart();
+            });
+    };
+
+    $scope.deleteProductFromCart = function (productId) {
+        $http.delete(contextPath + '/carts/' + productId)
+            .then(function (response) {
+                alert('DELETED')
+                $scope.loadCart();
+            });
+    };
 
     /* $scope.deleteProduct = function(productId){
          $http.delete(contextPath + '/products/' + productId)
@@ -64,5 +87,6 @@ angular.module('homework_app', []).controller('indexController', function ($scop
     }*/
 
     $scope.loadProducts();
+    $scope.loadCart();
 
 });
