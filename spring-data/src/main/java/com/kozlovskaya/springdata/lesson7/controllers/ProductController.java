@@ -44,12 +44,6 @@ public class ProductController {
         return productConverter.entityToDto(product);
     }
 
-    /*@PostMapping
-    public Product addProduct(@RequestBody Product product){
-        product.setId(null);
-        return productService.addProduct(product);
-    }*/
-
     @PostMapping
     public ProductDto addProduct(@RequestBody ProductDto productDto){
         productValidator.validate(productDto);

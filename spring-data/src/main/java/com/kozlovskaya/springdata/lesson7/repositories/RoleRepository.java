@@ -1,6 +1,6 @@
 package com.kozlovskaya.springdata.lesson7.repositories;
 
-import com.kozlovskaya.springsecurity.entities.Role;
+import com.kozlovskaya.springdata.lesson7.entities.Role;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

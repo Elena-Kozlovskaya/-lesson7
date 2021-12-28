@@ -1,8 +1,11 @@
-angular.module('homework_app', []).controller('indexController', function ($scope, $http) {
+angular.module('homework_app', ['ngStorage']).controller('indexController', function ($scope, $rootScope, $http, $localStorage) {
     const contextPath = 'http://localhost:8189/homework_app/api/v1';
 
     // console.log(123);
 
+    if ($localStorage.springWebUser) {
+        $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.springWebUser.token;
+    }
 
     $scope.loadProducts = function (pageIndex = 1) {
         $http({
@@ -18,6 +21,70 @@ angular.module('homework_app', []).controller('indexController', function ($scop
             $scope.ProductsPage = response.data;
         });
     };
+
+    $scope.tryToAuth = function () {
+        $http.post('http://localhost:8189/homework_app/auth', $scope.user)
+            .then(function successCallback(response) {
+                if (response.data.token) {
+                    $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
+                    $localStorage.springWebUser = {username: $scope.user.username, token: response.data.token};
+
+                    $scope.user.username = null;
+                    $scope.user.password = null;
+                }
+            }, function errorCallback(response) {
+            });
+    };
+
+    $scope.tryToSignUp = function () {
+        $http.post('http://localhost:8189/homework_app/registration', $scope.newUser)
+            .then(function (response) {
+                console.log(response);
+                if ($scope.newUser.username) {
+                   $scope.newUser.username = null;
+                }
+                if ($scope.newUser.password) {
+                    $scope.newUser.password = null;
+                }
+                if ($scope.newUser.email) {
+                    $scope.newUser.email = null;
+                }
+
+
+            });
+    };
+
+    $scope.tryToLogout = function () {
+        $scope.clearUser();
+        if ($scope.user.username) {
+            $scope.user.username = null;
+        }
+        if ($scope.user.password) {
+            $scope.user.password = null;
+        }
+    };
+
+    $scope.clearUser = function () {
+        delete $localStorage.springWebUser;
+        $http.defaults.headers.common.Authorization = '';
+    };
+
+    $rootScope.isUserLoggedIn = function () {
+        if ($localStorage.springWebUser) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    $scope.showCurrentUserInfo = function () {
+        $http.get('http://localhost:8189/homework_app/api/v1/profile')
+            .then(function successCallback(response) {
+                alert('MY NAME IS: ' + response.data.username);
+            }, function errorCallback(response) {
+                alert('UNAUTHORIZED');
+            });
+    }
 
     $scope.loadCart = function () {
         $http.get(contextPath + '/carts')
