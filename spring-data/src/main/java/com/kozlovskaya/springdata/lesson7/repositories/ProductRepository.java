@@ -1,39 +1,24 @@
 package com.kozlovskaya.springdata.lesson7.repositories;
 
-import com.kozlovskaya.springdata.lesson7.data.Product;
-import org.springframework.stereotype.Component;
+import com.kozlovskaya.springdata.lesson7.entities.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-@Component
-public class ProductRepository {
-    private List<Product> productNews;
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
-    @PostConstruct
-    public void init() {
-        this.productNews = new ArrayList<>(List.of(
-                new Product(1L, "Potato", 2),
-                new Product(2L, "Carrot", 4),
-                new Product(3L, "Pepper", 8),
-                new Product(4L, "Tomato", 16)
-        ));
-    }
+    //@Query("select p from Product p where p.cost between ?1 and ?2")
+    List<Product> findAllByCostBetween(Integer min, Integer max);
 
-    public List<Product> getAllProducts() {
-        return Collections.unmodifiableList(productNews);
-    }
+    @Query("select p from Product p where p.cost > ?1")
+    List<Product> findAllByCostMoreThanMin(Integer min);
 
-    public void deleteById(Long id){
-        productNews.removeIf(p-> p.getId().equals(id));
-    }
+    @Query("select p from Product p where p.cost < ?1")
+    List<Product> findAllByCostLessThanMax(Integer max);
 
-    public Product findProductById(Long id) {
-        return productNews.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .get();
-    }
+
 }
