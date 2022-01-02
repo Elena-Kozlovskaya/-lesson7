@@ -3,15 +3,15 @@ package com.kozlovskaya.springdata.lesson7.services;
 import com.kozlovskaya.springdata.lesson7.entities.Permission;
 import com.kozlovskaya.springdata.lesson7.entities.Role;
 import com.kozlovskaya.springdata.lesson7.entities.User;
+import com.kozlovskaya.springdata.lesson7.repositories.RoleRepository;
 import com.kozlovskaya.springdata.lesson7.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +24,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
-    public Optional<User> findByUsername(String username){
+    public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
@@ -58,9 +60,14 @@ public class UserService implements UserDetailsService {
         return authorities;
     }
 
-    public User save(User user){
+    @Transactional
+    public void createNewUser(User user) {
+        if (!findByUsername(user.getUsername()).isEmpty()) {
+            throw new RuntimeException(String.format("User '%s' already exists", user.getUsername()));
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        user.setRoles(roleRepository.findByRoleName("ROLE_USER"));
+        userRepository.save(user);
     }
 
 

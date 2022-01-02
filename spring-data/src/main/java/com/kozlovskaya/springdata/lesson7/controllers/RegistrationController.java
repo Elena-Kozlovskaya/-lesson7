@@ -18,10 +18,9 @@ public class RegistrationController {
     private final UserRegistrationValidator userRegistrationValidator;
 
     @PostMapping("/registration")
-    public UserRegistrationDto addProduct(@RequestBody UserRegistrationDto userRegistrationDto) {
+    public void addNewUser(@RequestBody UserRegistrationDto userRegistrationDto) {
         userRegistrationValidator.validate(userRegistrationDto);
         User user = userRegistrationConverter.dtoToEntity(userRegistrationDto);
-        user = userService.save(user);
-        return userRegistrationConverter.entityToDto(user);
+        userService.createNewUser(user);
     }
 }

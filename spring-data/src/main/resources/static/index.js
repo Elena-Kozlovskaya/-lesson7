@@ -49,8 +49,8 @@ angular.module('homework_app', ['ngStorage']).controller('indexController', func
                 if ($scope.newUser.email) {
                     $scope.newUser.email = null;
                 }
-
-
+            }, function errorCallback(response) {
+                alert('User already exists');
             });
     };
 
